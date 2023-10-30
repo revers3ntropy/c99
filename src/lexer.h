@@ -86,7 +86,7 @@ char *trimAllChars(char *str) {
   if (str == NULL) {
     return NULL;
   }
-  char *newStr = (char *)malloc(strlen(str));
+  char *newStr = (char *)malloc(strlen(str)+1);
   newStr[strlen(str)] = '\0';
   memset(newStr, ' ', strlen(str));
   int newStringptr = 0;
@@ -100,6 +100,7 @@ char *trimAllChars(char *str) {
   str = (char *)malloc(newStringptr + 1);
   str[newStringptr] = '\0';
   memcpy(str, newStr, newStringptr);
+  free(newStr);
   return str;
 }
 

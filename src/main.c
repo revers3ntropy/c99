@@ -6,5 +6,6 @@
 
 int main() {
   char *processed = processFile("src/lexer.h");
+  free(processed);
   return 0;
 }
