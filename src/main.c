@@ -1,6 +1,10 @@
+#include <limits.h>
 #include <stdio.h>
+#include <unistd.h>
 
-int main () {
-    printf("Hello, World!\n");
-    return 0;
+#include "lexer.h"
+
+int main() {
+  char *processed = processFile("src/lexer.h");
+  return 0;
 }
