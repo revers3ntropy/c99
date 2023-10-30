@@ -4,6 +4,9 @@
 #include <string.h>
 
 char *readFileToString(char *filename) {
+  if (filename == NULL) {
+    return NULL;
+  }
   FILE *fp = fopen(filename, "rb");
   if (fp == NULL) {
     printf("File cannot be opened or does not exist\n");
@@ -30,6 +33,9 @@ char *readFileToString(char *filename) {
 }
 
 char *removeSingleLineComments(char *str) {
+  if (str == NULL) {
+    return NULL;
+  }
   // remove all single comments from the string
   char *newStr = (char *)malloc(strlen(str) + 1);
   newStr[strlen(str)] = '\0';
@@ -52,6 +58,9 @@ char *removeSingleLineComments(char *str) {
 }
 
 char *removeMultilineComments(char *str) {
+  if (str == NULL) {
+    return NULL;
+  }
   // remove all multiline comments from the string
   char *newStr = (char *)malloc(strlen(str) + 1);
   newStr[strlen(str)] = '\0';
@@ -74,6 +83,9 @@ char *removeMultilineComments(char *str) {
 }
 
 char *trimAllChars(char *str) {
+  if (str == NULL) {
+    return NULL;
+  }
   char *newStr = (char *)malloc(strlen(str));
   newStr[strlen(str)] = '\0';
   memset(newStr, ' ', strlen(str));
