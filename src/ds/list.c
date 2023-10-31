@@ -1,10 +1,15 @@
 #include "list.h"
 
 void list_Print(list_t *list) {
+  if (list == NULL || list->size == 0){
+    printf("[]\n");
+    return;
+  }
   listNode_t *temp = list->head;
   printf("[ ");
   while (temp != NULL) {
-    printf("%d ", *(int *)temp->data);
+    printf("%p ", temp->data);
+    //printf("%c", ((token_t *)temp->data)->type);
     temp = temp->next;
   }
   printf("]\n");
