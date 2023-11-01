@@ -14,12 +14,14 @@ typedef enum tokenTypes {
   SUBTRACTION = '-',
   ASTERISK = '*',
   DIVISION = '/',
+  ADRRESS_OF = '&',
   LEFT_BRACE = '{',
   RIGHT_BRACE = '}',
   LEFT_PAREN = '(',
   RIGHT_PAREN = ')',
   SEMICOLON = ';',
   HASH = '#',
+  EQUALS = '=',
   LEFT_CROCODILE = '<',
   RIGHT_CROCODILE = '>',
   LEFT_SQUARE_BRACKET = '[',
@@ -58,6 +60,19 @@ void printTokenList(list_t *list) {
     temp = temp->next;
   }
   printf("]\n");
+}
+
+void list_tokens_Free(list_t * list){
+    listNode_t *temp = list->head;
+    while (temp != NULL){
+        token_t *token = (token_t *)temp->data;
+        if (token->type == STRING_LITERAL || token->type == IDENTIFIER || token->type == CHAR_LITERAL || token->type == INTEGER_LITERAL){
+            free(token->value);
+        }
+        free(token);
+        temp = temp->next;
+    }
+    list_Free(list);
 }
 
 token_t *newToken(void *value, tokenType type) {
@@ -169,6 +184,10 @@ list_t *tokenise(char *str) {
     } else if (str[i] == RIGHT_SQUARE_BRACKET) {
       list_Append(tokens, (void *)newToken((void *)RIGHT_SQUARE_BRACKET,
                                            RIGHT_SQUARE_BRACKET));
+    } else if (str[i] == EQUALS) {
+      list_Append(tokens, (void *)newToken((void *)EQUALS, EQUALS));
+    } else if (str[i] == ADRRESS_OF) {
+      list_Append(tokens, (void *)newToken((void *)ADRRESS_OF, ADRRESS_OF));
     } else if (str[i] == '\'') {
       if (str[i + 2] != '\'') {
         printf("Invalid literal, character literal must be one character and "
@@ -207,11 +226,12 @@ list_t *tokenise(char *str) {
       // set what is pointed to by value to the integer value of LiteralString
       *value = atoi(LiteralString);
       list_Append(tokens, (void *)newToken((void *)value, INTEGER_LITERAL));
+      free(LiteralString);
       i = i + j - 1;
     } else if (isalpha(str[i])) {
         // attempt to parse an identifier 
         int j = 0;
-        while (isalpha(str[i + j])) {
+        while (isalpha(str[i + j]) || isdigit(str[i + j]) || str[i + j] == '_') {
           j++;
         }
         char *identifier = (char *)malloc(j + 1);
