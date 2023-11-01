@@ -1,7 +1,4 @@
-#include <limits.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include "ds/list.h"
 #include "lexer.h"
