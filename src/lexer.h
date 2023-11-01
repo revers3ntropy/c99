@@ -62,9 +62,9 @@ void printTokenList(list_t *list) {
   printf("]\n");
 }
 
-void list_tokens_Free(list_t * list){
+void list_tokens_Free(list_t *list) {
     listNode_t *temp = list->head;
-    while (temp != NULL){
+    while (temp != NULL) {
         token_t *token = (token_t *)temp->data;
         if (token->type == STRING_LITERAL || token->type == IDENTIFIER || token->type == CHAR_LITERAL || token->type == INTEGER_LITERAL){
             free(token->value);
@@ -149,7 +149,8 @@ char *removeAllComments(char *str) {
   return str;
 }
 
-list_t *tokenise(char *str) {
+list_t *tokenise(char *source_code) {
+  char* str = removeAllComments(source_code);
   list_t *tokens = list_Initialise();
   for (int i = 0; i < strlen(str); i++) {
     if (str[i] == HASH) {
@@ -242,12 +243,6 @@ list_t *tokenise(char *str) {
     }
   }
   return tokens;
-}
-
-char *processFile(char *file) {
-  char *fileBuf = readFileToString(file);
-  fileBuf = removeAllComments(fileBuf);
-  return fileBuf;
 }
 
 #endif

@@ -3,11 +3,15 @@
 #include "ds/list.h"
 #include "lexer.h"
 
-int main() {
-  char *processed = processFile("src/main.c");
-  list_t *tokens = tokenise(processed);
+void compile(char *source) {
+  list_t *tokens = tokenise(source);
   printTokenList(tokens);
   list_tokens_Free(tokens);
-  free(processed);
+  free(source);
+}
+
+int main() {
+  char *source = readFileToString("src/main.c");
+  compile(source);
   return 0;
 }
