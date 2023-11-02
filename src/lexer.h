@@ -5,6 +5,7 @@
 
 #include <ctype.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +21,8 @@ typedef enum tokenTypes {
   LEFT_PAREN = '(',
   RIGHT_PAREN = ')',
   SEMICOLON = ';',
+  COMMA = ',',
+  PERIOD = '.',
   HASH = '#',
   EQUALS = '=',
   LEFT_CROCODILE = '<',
@@ -139,7 +142,7 @@ char *removeAllComments(char *str) {
   }
   int contigousIndex = 0;
   for (int i = 0; i < length; i++) {
-    if (str[i] != '`') {
+    if (str[i] != '`' && str[i] != '\t') {
       str[contigousIndex] = str[i];
       contigousIndex++;
     }
@@ -151,11 +154,13 @@ char *removeAllComments(char *str) {
 
 list_t *tokenise(char *str) {
   list_t *tokens = list_Initialise();
-  for (int i = 0; i < strlen(str); i++) {
+  for (size_t i = 0; i < strlen(str); i++) {
     if (str[i] == HASH) {
       list_Append(tokens, (void *)newToken((void *)HASH, HASH));
     } else if (str[i] == LEFT_BRACE) {
       list_Append(tokens, (void *)newToken((void *)LEFT_BRACE, LEFT_BRACE));
+    } else if (str[i] == COMMA) {
+      list_Append(tokens, (void *)newToken((void *)COMMA, COMMA));
     } else if (str[i] == RIGHT_BRACE) {
       list_Append(tokens, (void *)newToken((void *)RIGHT_BRACE, RIGHT_BRACE));
     } else if (str[i] == LEFT_PAREN) {
@@ -173,6 +178,19 @@ list_t *tokenise(char *str) {
     } else if (str[i] == DIVISION) {
       list_Append(tokens, (void *)newToken((void *)DIVISION, DIVISION));
     } else if (str[i] == LEFT_CROCODILE) {
+        if (str[i-1] == 'e' || str[i-2] == 'e') {
+            int j = i+1;
+            while (str[j] != RIGHT_CROCODILE){
+                j++;
+            }
+            char *LiteralString = (char *)malloc(j - i - 1);
+            LiteralString = (char *)memcpy((char *)LiteralString, str + i + 1, j-i-1);
+            LiteralString[j-i -1] = '\0';
+            list_Append(tokens, (void *)newToken((void *)LEFT_CROCODILE, LEFT_CROCODILE));
+            list_Append(tokens, (void *)newToken((void *)LiteralString, STRING_LITERAL));
+            list_Append(tokens, (void *)newToken((void *)RIGHT_CROCODILE, RIGHT_CROCODILE));
+            i = j+2;
+        }
       list_Append(tokens,
                   (void *)newToken((void *)LEFT_CROCODILE, LEFT_CROCODILE));
     } else if (str[i] == RIGHT_CROCODILE) {
@@ -201,7 +219,7 @@ list_t *tokenise(char *str) {
         list_Append(tokens,
                     (void *)newToken((void *)literalValue, CHAR_LITERAL));
       }
-    } else if (str[i] == 34) {
+    } else if (str[i] == 34) { // parsing string literals
       int j = i + 1;
       while (str[j] != 34) {
         j++;
@@ -212,10 +230,10 @@ list_t *tokenise(char *str) {
       LiteralValue[j-i] = '\0';
       list_Append(tokens,
                   (void *)newToken((void *)LiteralValue, STRING_LITERAL));
-      i = j + 1;
+      i = j ;
     } else if (isdigit(str[i])) {
       int j = 0;
-      while (isdigit(str[i + j])) {
+      while (isdigit(str[i + j]) || str[i + j] == '.') {
         j++;
       }
       // access str[i] and str[i+j] for the value of the literal
@@ -239,6 +257,8 @@ list_t *tokenise(char *str) {
         identifier = (char *)memcpy((char *)identifier, str + i, j);
         list_Append(tokens, (void *)newToken((void *)identifier, IDENTIFIER));
         i = i + j - 1;
+    }else if (str[i] == COMMA) {
+        list_Append(tokens, (void *)newToken((void *)COMMA, COMMA));
     }
   }
   return tokens;
