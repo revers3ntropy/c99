@@ -3,17 +3,32 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "ds/list.h"
+// #include "ds/ast.h"
+#include "ds/token_list.h"
+
 #include "lexer.h"
 
 int main() {
-  const char *file = "src/main.c";
-  char *processed = processFile((char *)file);
-  printf("%s \n", processed);
-  list_t *tokens = tokenise(processed);
-  printTokenList(tokens);
-  list_tokens_Free(tokens);
-  free(processed);
+  char *processed = processFile((char *)"../bin/test");
+
+  /*
+    // ast testing with dodgy macro things
+    AST *term =
+        AST_NEW(AST_ADD, AST_NEW(AST_INTEGER, 4),
+                AST_NEW(AST_ADD,
+                        AST_NEW(AST_MULTIPLY, AST_NEW(AST_INTEGER, 2),
+                                AST_NEW(AST_INTEGER, 10), ),
+                        AST_NEW(AST_MULTIPLY, AST_NEW(AST_INTEGER, 3),
+                                AST_NEW(AST_ADD, AST_NEW(AST_INTEGER, 5),
+                                        AST_NEW(AST_INTEGER, 1), ), ), ), );
+      ast_print(term);
+  */
+
+  // testing of parsing
+  list_t *list = tokenlist_Initialise();
+  scanToken(processed, list);
+  tokenlist_Print(list);
+  tokenlist_Free(list);
+
   return 0;
 }
-int add(int x, int y) { return x + y; }

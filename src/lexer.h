@@ -1,6 +1,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+/*
 #include "ds/list.h"
 
 #include <ctype.h>
@@ -9,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 typedef enum tokenTypes {
   ADDITION = '+',
   SUBTRACTION = '-',
@@ -37,7 +37,7 @@ typedef enum tokenTypes {
 
 typedef struct token {
   void *value;
-  tokenType type;
+  tokenType type;enum
 } token_t;
 
 void printTokenList(list_t *list) {
@@ -69,7 +69,8 @@ void list_tokens_Free(list_t * list){
     listNode_t *temp = list->head;
     while (temp != NULL){
         token_t *token = (token_t *)temp->data;
-        if (token->type == STRING_LITERAL || token->type == IDENTIFIER || token->type == CHAR_LITERAL || token->type == INTEGER_LITERAL){
+        if (token->type == STRING_LITERAL || token->type == IDENTIFIER ||
+token->type == CHAR_LITERAL || token->type == INTEGER_LITERAL){
             free(token->value);
         }
         free(token);
@@ -88,6 +89,10 @@ token_t *newToken(void *value, tokenType type) {
   token->type = type;
   return token;
 }
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 char *readFileToString(char *filename) {
   if (filename == NULL) {
@@ -151,7 +156,7 @@ char *removeAllComments(char *str) {
   str = (char *)realloc(str, contigousIndex + 1);
   return str;
 }
-
+/*
 list_t *tokenise(char *str) {
   list_t *tokens = list_Initialise();
   for (size_t i = 0; i < strlen(str); i++) {
@@ -184,12 +189,11 @@ list_t *tokenise(char *str) {
                 j++;
             }
             char *LiteralString = (char *)malloc(j - i - 1);
-            LiteralString = (char *)memcpy((char *)LiteralString, str + i + 1, j-i-1);
-            LiteralString[j-i -1] = '\0';
-            list_Append(tokens, (void *)newToken((void *)LEFT_CROCODILE, LEFT_CROCODILE));
-            list_Append(tokens, (void *)newToken((void *)LiteralString, STRING_LITERAL));
-            list_Append(tokens, (void *)newToken((void *)RIGHT_CROCODILE, RIGHT_CROCODILE));
-            i = j+2;
+            LiteralString = (char *)memcpy((char *)LiteralString, str + i + 1,
+j-i-1); LiteralString[j-i -1] = '\0'; list_Append(tokens, (void *)newToken((void
+*)LEFT_CROCODILE, LEFT_CROCODILE)); list_Append(tokens, (void *)newToken((void
+*)LiteralString, STRING_LITERAL)); list_Append(tokens, (void *)newToken((void
+*)RIGHT_CROCODILE, RIGHT_CROCODILE)); i = j+2;
         }
       list_Append(tokens,
                   (void *)newToken((void *)LEFT_CROCODILE, LEFT_CROCODILE));
@@ -247,10 +251,10 @@ list_t *tokenise(char *str) {
       free(LiteralString);
       i = i + j - 1;
     } else if (isalpha(str[i])) {
-        // attempt to parse an identifier 
+        // attempt to parse an identifier
         int j = 0;
-        while (isalpha(str[i + j]) || isdigit(str[i + j]) || str[i + j] == '_') {
-          j++;
+        while (isalpha(str[i + j]) || isdigit(str[i + j]) || str[i + j] == '_')
+{ j++;
         }
         char *identifier = (char *)malloc(j + 1);
         identifier[j] = '\0';
@@ -263,11 +267,10 @@ list_t *tokenise(char *str) {
   }
   return tokens;
 }
-
+*/
 char *processFile(char *file) {
   char *fileBuf = readFileToString(file);
   fileBuf = removeAllComments(fileBuf);
   return fileBuf;
 }
-
 #endif
