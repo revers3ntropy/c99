@@ -1,59 +1,28 @@
-#ifndef LEXER_H
-#define LEXER_H
-
-#include "ds/list.h"
-
 #include <ctype.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum tokenTypes {
-  ADDITION = '+',
-  SUBTRACTION = '-',
-  ASTERISK = '*',
-  DIVISION = '/',
-  ADRRESS_OF = '&',
-  LEFT_BRACE = '{',
-  RIGHT_BRACE = '}',
-  LEFT_PAREN = '(',
-  RIGHT_PAREN = ')',
-  SEMICOLON = ';',
-  HASH = '#',
-  EQUALS = '=',
-  LEFT_CROCODILE = '<',
-  RIGHT_CROCODILE = '>',
-  LEFT_SQUARE_BRACKET = '[',
-  RIGHT_SQUARE_BRACKET = ']',
-  IDENTIFIER = 'i',
-  CHAR_LITERAL = 'c',
-  STRING_LITERAL = 's',
-  INTEGER_LITERAL = 'd',
-} tokenType;
+#include "../ds/list.h"
+#include "lexer.h"
 
-typedef struct token {
-  void *value;
-  tokenType type;
-} token_t;
-
-void printTokenList(list_t *list) {
+void printTokenList(list_t* list) {
   if (list == NULL || list->size == 0) {
     printf("[]\n");
     return;
   }
-  listNode_t *temp = list->head;
+  listNode_t* temp = list->head;
   printf("[ ");
   while (temp != NULL) {
-    token_t *token = ((token_t *)temp->data);
+    token_t *token = ((token_t*)temp->data);
     if (token->type == STRING_LITERAL) {
-      printf("\"%s\" ", (char *)(token->value));
+      printf("\"%s\" ", (char*)(token->value));
     } else if (token->type == CHAR_LITERAL) {
       printf("\'%c\' ", (char)(token->type));
     } else if (token->type == INTEGER_LITERAL) {
-      printf("%d ", *((int *)(token->value)));
+      printf("%d ", *((int*)(token->value)));
     } else if (token->type == IDENTIFIER) {
-      printf("%s ", (char *)(token->value));
+      printf("%s ", (char*)(token->value));
     } else {
       printf("%c ", (char)(token->type));
     }
@@ -63,9 +32,9 @@ void printTokenList(list_t *list) {
 }
 
 void list_tokens_Free(list_t *list) {
-    listNode_t *temp = list->head;
+    listNode_t* temp = list->head;
     while (temp != NULL) {
-        token_t *token = (token_t *)temp->data;
+        token_t* token = (token_t*)temp->data;
         if (token->type == STRING_LITERAL || token->type == IDENTIFIER || token->type == CHAR_LITERAL || token->type == INTEGER_LITERAL){
             free(token->value);
         }
@@ -75,8 +44,8 @@ void list_tokens_Free(list_t *list) {
     list_Free(list);
 }
 
-token_t *newToken(void *value, tokenType type) {
-  token_t *token = (token_t *)malloc(sizeof(token_t));
+token_t* newToken(void* value, tokenType type) {
+  token_t* token = (token_t*)malloc(sizeof(token_t));
   if (token == NULL) {
     printf("Error allocating memory for a new token struct\n");
     return NULL;
@@ -86,11 +55,11 @@ token_t *newToken(void *value, tokenType type) {
   return token;
 }
 
-char *readFileToString(char *filename) {
+char *readFileToString(char* filename) {
   if (filename == NULL) {
     return NULL;
   }
-  FILE *fp = fopen(filename, "rb");
+  FILE* fp = fopen(filename, "rb");
   if (fp == NULL) {
     printf("File cannot be opened or does not exist\n");
     return NULL;
@@ -145,7 +114,7 @@ char *removeAllComments(char *str) {
     }
   }
   str[contigousIndex] = '\0';
-  str = (char *)realloc(str, contigousIndex + 1);
+  str = (char*)realloc(str, contigousIndex + 1);
   return str;
 }
 
@@ -244,5 +213,3 @@ list_t *tokenise(char *source_code) {
   }
   return tokens;
 }
-
-#endif

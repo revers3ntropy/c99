@@ -1,30 +1,29 @@
 #include "list.h"
 
-void list_Print(list_t *list) {
+void list_Print(list_t* list) {
   if (list == NULL || list->size == 0){
     printf("[]\n");
     return;
   }
-  listNode_t *temp = list->head;
+  listNode_t* temp = list->head;
   printf("[ ");
   while (temp != NULL) {
     printf("%p ", temp->data);
-    //printf("%c", ((token_t *)temp->data)->type);
     temp = temp->next;
   }
   printf("]\n");
 }
 
-list_t *list_Initialise() {
-  list_t *list = (list_t *)malloc(sizeof(list_t));
+list_t* list_Initialise() {
+  list_t* list = (list_t*)malloc(sizeof(list_t));
   list->size = 0;
   list->head = NULL;
   list->tail = NULL;
   return list;
 }
 
-void list_Prepend(list_t *list, void *data) {
-  listNode_t *newNode = (listNode_t *)malloc(sizeof(listNode_t));
+void list_Prepend(list_t* list, void* data) {
+  listNode_t* newNode = (listNode_t*)malloc(sizeof(listNode_t));
   newNode->data = data;
   if (list->size == 0) {
     newNode->next = NULL;
@@ -40,8 +39,8 @@ void list_Prepend(list_t *list, void *data) {
   list->size++;
 }
 
-void list_Append(list_t *list, void *data) {
-  listNode_t *newNode = (listNode_t *)malloc(sizeof(listNode_t));
+void list_Append(list_t* list, void* data) {
+  listNode_t*newNode = (listNode_t*)malloc(sizeof(listNode_t));
   newNode->data = data;
   if (list->size == 0) {
     newNode->next = NULL;
@@ -57,7 +56,7 @@ void list_Append(list_t *list, void *data) {
   list->size++;
 }
 
-void list_RemoveTail(list_t *list) {
+void list_RemoveTail(list_t* list) {
   if (list->size == 0) {
     return;
   } else if (list->size == 1) {
@@ -67,14 +66,14 @@ void list_RemoveTail(list_t *list) {
     list->size = 0;
     return;
   }
-  listNode_t *temp = list->tail;
+  listNode_t* temp = list->tail;
   list->tail = list->tail->prev;
   list->tail->next = NULL;
   free(temp);
   list->size--;
 }
 
-void list_RemoveHead(list_t *list) {
+void list_RemoveHead(list_t* list) {
   if (list->size == 0) {
     return;
   } else if (list->size == 1) {
@@ -84,13 +83,13 @@ void list_RemoveHead(list_t *list) {
     list->size = 0;
     return;
   }
-  listNode_t *temp = list->head;
+  listNode_t* temp = list->head;
   list->head = list->head->next;
   list->size--;
   free(temp);
 }
 
-void list_Free(list_t *list) {
+void list_Free(list_t* list) {
   while (list->size > 0) {
     list_RemoveTail(list);
   }
