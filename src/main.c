@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "ds/token_list.h"
+#include "ds/tokens.h"
 
 #include "lexer.h"
 
