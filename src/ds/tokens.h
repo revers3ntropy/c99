@@ -3,8 +3,6 @@
 #include <string.h>
 #include <sys/types.h>
 
-#define STR(x) "\"#x\""
-
 enum tokenType {
   // Single Character Tokens
   LEFT_BRACE,
@@ -48,6 +46,9 @@ enum tokenType {
   RETURN,
   INT,
   VOID,
+  WHILE,
+  FOR,
+  INCLUDE,
 
   // mark eof
   EOF_TOKEN
@@ -127,24 +128,20 @@ const char *tokenTypeAsString(enum tokenType type) {
     return "EOF";
   case CHARACTER:
     return "CHAR";
+  case WHILE:
+    return "WHILE";
+  case FOR:
+    return "FOR";
+      case INCLUDE:
+          return "INCLUDE";
   }
-return "UNKNOWN";
+  return "UNKNOWN";
 }
 
 typedef struct Token {
   enum tokenType type;
-  char *lexeme;
   void *literal;
 } token_t;
-
-char *token_toString(token_t *t) {
-  uint maxLen = 256;
-  char *stringRep = (char *)malloc(maxLen * sizeof(char));
-  snprintf(stringRep, maxLen, "%s %s %s", STR(t->type), t->lexeme,
-           STR(&t->literal));
-  stringRep = (char *)realloc(stringRep, strlen(stringRep) + 1);
-  return stringRep;
-}
 
 char *token_typeToString(token_t *t) {
   uint maxlen = 256;
@@ -154,10 +151,9 @@ char *token_typeToString(token_t *t) {
   return stringRep;
 }
 
-token_t *token_new(enum tokenType type, char *lexeme, void *literal) {
+token_t *token_new(enum tokenType type, void *literal) {
   token_t *t = (token_t *)malloc(sizeof(token_t));
   t->type = type;
-  t->lexeme = lexeme;
   t->literal = literal;
   return t;
 }
