@@ -1,37 +1,14 @@
-#ifndef LEXER_H
-#define LEXER_H
+#include "parser.h"
+#include "../ast/empty_block.h"
+#include "../ast/function_def.h"
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-char *readFileToString(char *filename) {
-  if (filename == NULL) {
-    return NULL;
-  }
-  FILE *fp = fopen(filename, "rb");
-  if (fp == NULL) {
-    printf("File cannot be opened or does not exist\n");
-    return NULL;
-  }
-  fseek(fp, 0, SEEK_END);
-  long fsize = ftell(fp);
-  fseek(fp, 0, SEEK_SET);
-
-  char *string = (char *)malloc(fsize + 1);
-  if (string == NULL) {
-    printf("Error allocating memory\n");
-    return NULL;
-  }
-
-  if (fread(string, fsize, 1, fp) == 0) {
-    printf("Error reading file\n");
-    return NULL;
-  }
-
-  fclose(fp);
-  string[fsize] = 0;
-  return string;
+AstNode *parse() {
+  return new_FunctionDefNode((char *) "main", new_EmptyBlockNode());
 }
 
 char *removeAllComments(char *str) {
@@ -64,13 +41,35 @@ char *removeAllComments(char *str) {
     }
   }
   str[contigousIndex] = '\0';
-  str = (char *)realloc(str, contigousIndex + 1);
+  str = (char *) realloc(str, contigousIndex + 1);
   return str;
 }
 
-char *processFile(char *file) {
-  char *fileBuf = readFileToString(file);
-  fileBuf = removeAllComments(fileBuf);
-  return fileBuf;
+char *readFileToString(char *filename) {
+  if (filename == NULL) {
+    return NULL;
+  }
+  FILE *fp = fopen(filename, "rb");
+  if (fp == NULL) {
+    printf("File cannot be opened or does not exist\n");
+    return NULL;
+  }
+  fseek(fp, 0, SEEK_END);
+  long fsize = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+
+  char *string = (char *) malloc(fsize + 1);
+  if (string == NULL) {
+    printf("Error allocating memory\n");
+    return NULL;
+  }
+
+  if (fread(string, fsize, 1, fp) == 0) {
+    printf("Error reading file\n");
+    return NULL;
+  }
+
+  fclose(fp);
+  string[fsize] = 0;
+  return string;
 }
-#endif

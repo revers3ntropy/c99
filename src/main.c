@@ -3,18 +3,25 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "ds/tokens.h"
+#include "ast/ast.h"
+#include "parsing/parser.h"
+#include "parsing/tokens.h"
 
-#include "lexer.h"
+void compile(char *source) {
+  list_t *tokens = tokenise(source);
+
+  tokenlist_Print(tokens);
+  AstNode *ast = parse(tokens);
+  tokenlist_Free(tokens);
+
+  CompileResult result = compileAst(ast);
+  printf("%s\n", result.assembly);
+  freeAstResult(result);
+}
 
 int main() {
-  char *processed = processFile((char *)"./src/main.c");
-
-  // testing of parsing
-  list_t *list = tokenlist_Initialise();
-  scanToken(processed, list);
-  tokenlist_Print(list);
-  tokenlist_Free(list);
-
+  char *source = readFileToString((char *) "src/main.c");
+  compile(source);
+  free(source);
   return 0;
 }

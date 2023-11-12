@@ -78,6 +78,8 @@ typedef struct listContainer {
 
 token_t *token_new(enum tokenType type, void *literal);
 
+void token_Free(token_t *t);
+
 const char *tokenTypeAsString(enum tokenType type);
 
 void tokenlist_Print(list_t *list);
@@ -90,6 +92,6 @@ void tokenlist_RemoveTail(list_t *list);
 
 void tokenlist_Free(list_t *list);
 
-void scanToken(char *input, list_t *list);
+list_t *tokenise(char *input);
 
 #endif
