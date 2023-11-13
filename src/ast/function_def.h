@@ -13,6 +13,6 @@ typedef struct {
 
 AstNode* new_FunctionDefNode(char* name, AstNode* body);
 
-CompileResult compile_FunctionDef(FunctionDefNode *self);
+CompileResult compile_FunctionDef(FunctionDefNode* self);
 
 #endif

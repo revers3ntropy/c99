@@ -1,6 +1,6 @@
 #include "tokens.h"
 
-const char *tokenTypeAsString(enum tokenType type) {
+const char* tokenTypeAsString(enum tokenType type) {
   switch (type) {
     case IF:
       return "IF";
@@ -84,14 +84,14 @@ const char *tokenTypeAsString(enum tokenType type) {
   return "UNKNOWN";
 }
 
-token_t *token_new(enum tokenType type, void *literal) {
-  token_t *t = (token_t *) malloc(sizeof(token_t));
+token_t* token_new(enum tokenType type, void* literal) {
+  token_t* t = (token_t*) malloc(sizeof(token_t));
   t->type = type;
   t->literal = literal;
   return t;
 }
 
-void token_Free(token_t *t) {
+void token_Free(token_t* t) {
   if (t) {
     if (t->literal) {
       free(t->literal);
@@ -100,15 +100,15 @@ void token_Free(token_t *t) {
   }
 }
 
-void tokenlist_Print(list_t *list) {
-  struct listNode *node = list->head;
+void tokenlist_Print(list_t* list) {
+  struct listNode* node = list->head;
   printf("[ ");
   while (node != NULL && node->token != NULL) {
     if (node->token->type == STRING || node->token->type == CHARACTER) {
       printf("%s(\"%s\") ", tokenTypeAsString(node->token->type),
-             (char *) node->token->literal);
+             (char*) node->token->literal);
     } else if (node->token->type == IDENTIFIER) {
-      printf("%s ", (char *) node->token->literal);
+      printf("%s ", (char*) node->token->literal);
     } else {
       printf("%s ", tokenTypeAsString(node->token->type));
     }
@@ -117,16 +117,16 @@ void tokenlist_Print(list_t *list) {
   printf("]\n");
 }
 
-list_t *tokenlist_Initialise() {
-  list_t *list = (list_t *) malloc(sizeof(list_t));
+list_t* tokenlist_Initialise() {
+  list_t* list = (list_t*) malloc(sizeof(list_t));
   list->size = 0;
   list->head = NULL;
   list->tail = NULL;
   return list;
 }
 
-void tokenlist_Append(list_t *list, token_t *t) {
-  listNode_t *newNode = (listNode_t *) malloc(sizeof(listNode_t));
+void tokenlist_Append(list_t* list, token_t* t) {
+  listNode_t* newNode = (listNode_t*) malloc(sizeof(listNode_t));
   newNode->token = t;
   if (list->size == 0) {
     newNode->next = NULL;
@@ -143,7 +143,7 @@ void tokenlist_Append(list_t *list, token_t *t) {
 }
 
 // will attempt to free the token in the tail node
-void tokenlist_RemoveTail(list_t *list) {
+void tokenlist_RemoveTail(list_t* list) {
   if (list->size == 0) {
     return;
   } else if (list->size == 1) {
@@ -154,7 +154,7 @@ void tokenlist_RemoveTail(list_t *list) {
     list->size = 0;
     return;
   }
-  listNode_t *temp = list->tail;
+  listNode_t* temp = list->tail;
   list->tail = list->tail->prev;
   list->tail->next = NULL;
   token_Free(temp->token);
@@ -162,15 +162,15 @@ void tokenlist_RemoveTail(list_t *list) {
   list->size--;
 }
 
-void tokenlist_Free(list_t *list) {
+void tokenlist_Free(list_t* list) {
   while (list->size > 0) {
     tokenlist_RemoveTail(list);
   }
   free(list);
 }
 
-list_t *tokenise(char *input) {
-  list_t *list = tokenlist_Initialise();
+list_t* tokenise(char* input) {
+  list_t* list = tokenlist_Initialise();
   uint i = 0;
   while (i < strlen(input)) {
     switch (input[i]) {
@@ -227,15 +227,15 @@ list_t *tokenise(char *input) {
         while (input[j] != '"' && (size_t) j < strlen(input)) {
           j++;
         }
-        char *LiteralValue = (char *) calloc(j - i + 1, sizeof(char));
-        LiteralValue = (char *) memcpy(LiteralValue, input + i + 1, j - i - 1);
+        char* LiteralValue = (char*) calloc(j - i + 1, sizeof(char));
+        LiteralValue = (char*) memcpy(LiteralValue, input + i + 1, j - i - 1);
         LiteralValue[j - i] = '\0';
         tokenlist_Append(list, token_new(STRING, LiteralValue));
         i = j;
         break;
       }
       case '\'': {// character literals
-        char *LiteralValue = (char *) malloc(2);
+        char* LiteralValue = (char*) malloc(2);
         LiteralValue[0] = input[i + 1];
         LiteralValue[1] = 0;
         tokenlist_Append(list, token_new(CHARACTER, LiteralValue));
@@ -301,8 +301,8 @@ list_t *tokenise(char *input) {
                  (size_t) j < strlen(input)) {
             j++;
           }
-          char *LiteralValue = (char *) malloc(j - i + 1);
-          LiteralValue = (char *) memcpy(LiteralValue, input + i, j - i);
+          char* LiteralValue = (char*) malloc(j - i + 1);
+          LiteralValue = (char*) memcpy(LiteralValue, input + i, j - i);
           LiteralValue[j - i] = '\0';
           i = j - 1;
 

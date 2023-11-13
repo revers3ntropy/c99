@@ -4,10 +4,10 @@
 #include "../ast/ast.h"
 #include "tokens.h"
 
-AstNode *parse();// will take in list ptr to tokens
+AstNode* parse();// will take in list ptr to tokens
 
-char *readFileToString(char *filename);
+char* readFileToString(char* filename);
 
-char *removeAllComments(char *str);
+char* removeAllComments(char* str);
 
 #endif

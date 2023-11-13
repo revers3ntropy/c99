@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-AstNode *parse() {
-  return new_FunctionDefNode((char *) "main", new_EmptyBlockNode());
+AstNode* parse() {
+  return new_FunctionDefNode((char*) "main", new_EmptyBlockNode());
 }
 
-char *removeAllComments(char *str) {
+char* removeAllComments(char* str) {
   if (str == NULL) {
     return NULL;
   }
@@ -41,15 +41,15 @@ char *removeAllComments(char *str) {
     }
   }
   str[contigousIndex] = '\0';
-  str = (char *) realloc(str, contigousIndex + 1);
+  str = (char*) realloc(str, contigousIndex + 1);
   return str;
 }
 
-char *readFileToString(char *filename) {
+char* readFileToString(char* filename) {
   if (filename == NULL) {
     return NULL;
   }
-  FILE *fp = fopen(filename, "rb");
+  FILE* fp = fopen(filename, "rb");
   if (fp == NULL) {
     printf("File cannot be opened or does not exist\n");
     return NULL;
@@ -58,7 +58,7 @@ char *readFileToString(char *filename) {
   long fsize = ftell(fp);
   fseek(fp, 0, SEEK_SET);
 
-  char *string = (char *) malloc(fsize + 1);
+  char* string = (char*) malloc(fsize + 1);
   if (string == NULL) {
     printf("Error allocating memory\n");
     return NULL;

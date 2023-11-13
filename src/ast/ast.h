@@ -15,10 +15,10 @@ typedef struct {
 } AstNode;
 
 typedef struct {
-  char *assembly;
+  char* assembly;
 } CompileResult;
 
-CompileResult compileAst(AstNode *node);
+CompileResult compileAst(AstNode* node);
 
 void freeAstResult(CompileResult result);
 

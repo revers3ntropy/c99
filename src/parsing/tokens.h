@@ -61,37 +61,37 @@ enum tokenType {
 
 typedef struct Token {
   enum tokenType type;
-  void *literal;
+  void* literal;
 } token_t;
 
 typedef struct listNode {
-  token_t *token;
-  struct listNode *next;
-  struct listNode *prev;
+  token_t* token;
+  struct listNode* next;
+  struct listNode* prev;
 } listNode_t;
 
 typedef struct listContainer {
   int size;
-  struct listNode *head;
-  struct listNode *tail;
+  struct listNode* head;
+  struct listNode* tail;
 } list_t;
 
-token_t *token_new(enum tokenType type, void *literal);
+token_t* token_new(enum tokenType type, void* literal);
 
-void token_Free(token_t *t);
+void token_Free(token_t* t);
 
-const char *tokenTypeAsString(enum tokenType type);
+const char* tokenTypeAsString(enum tokenType type);
 
-void tokenlist_Print(list_t *list);
+void tokenlist_Print(list_t* list);
 
-list_t *tokenlist_Initialise();
+list_t* tokenlist_Initialise();
 
-void tokenlist_Append(list_t *list, token_t *t);
+void tokenlist_Append(list_t* list, token_t* t);
 
-void tokenlist_RemoveTail(list_t *list);
+void tokenlist_RemoveTail(list_t* list);
 
-void tokenlist_Free(list_t *list);
+void tokenlist_Free(list_t* list);
 
-list_t *tokenise(char *input);
+list_t* tokenise(char* input);
 
 #endif

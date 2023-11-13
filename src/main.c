@@ -7,11 +7,11 @@
 #include "parsing/parser.h"
 #include "parsing/tokens.h"
 
-void compile(char *source) {
-  list_t *tokens = tokenise(source);
+void compile(char* source) {
+  list_t* tokens = tokenise(source);
 
   tokenlist_Print(tokens);
-  AstNode *ast = parse(tokens);
+  AstNode* ast = parse(tokens);
   tokenlist_Free(tokens);
 
   CompileResult result = compileAst(ast);
@@ -20,7 +20,7 @@ void compile(char *source) {
 }
 
 int main() {
-  char *source = readFileToString((char *) "src/main.c");
+  char* source = readFileToString((char*) "src/main.c");
   compile(source);
   free(source);
   return 0;
