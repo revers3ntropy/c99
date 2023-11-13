@@ -2,10 +2,24 @@
 #include "empty_block.h"
 #include "function_def.h"
 
-CompileResult compileAst(AstNode* node) {
+CompileResult compileAst(AstNode *node) {
+  CompileResult res;
   switch (node->type) {
-    case FUNCTION_DEF: return compile_FunctionDef((FunctionDefNode*)node);
-    case EMPTY_BLOCK: return compile_EmptyBlock((EmptyBlockNode*)node);
+    case FUNCTION_DEF:
+      res = compile_FunctionDef((FunctionDefNode *) node);
+      break;
+    case EMPTY_BLOCK:
+      res = compile_EmptyBlock();
+      break;
+    default:
+      res = (CompileResult){(char *) "nop\n"};
   }
-  return (CompileResult){ "nop\n" };
+  free(node);
+  return res;
+}
+
+void freeAstResult(CompileResult result) {
+  if (result.assembly) {
+    free(result.assembly);
+  }
 }

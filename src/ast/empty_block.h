@@ -7,8 +7,8 @@ typedef struct {
   AstNodeType t;
 } EmptyBlockNode;
 
-AstNode* new_EmptyBlockNode();
+AstNode *new_EmptyBlockNode();
 
-CompileResult compile_EmptyBlock(EmptyBlockNode* _self);
+CompileResult compile_EmptyBlock();
 
 #endif

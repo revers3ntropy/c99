@@ -2,14 +2,13 @@
 
 #include "empty_block.h"
 
-AstNode* new_EmptyBlockNode() {
-  EmptyBlockNode* self = malloc(sizeof(EmptyBlockNode));
+AstNode *new_EmptyBlockNode() {
+  EmptyBlockNode *self = malloc(sizeof(EmptyBlockNode));
   self->t = EMPTY_BLOCK;
-  return (AstNode*)self;
+  return (AstNode *) self;
 }
 
-CompileResult compile_EmptyBlock(EmptyBlockNode *_self) {
-  CompileResult res = { "nop\n" };
+CompileResult compile_EmptyBlock() {
+  CompileResult res = {(char *) "nop\n"};
   return res;
 }
-
