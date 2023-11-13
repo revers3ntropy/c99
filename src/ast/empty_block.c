@@ -9,6 +9,6 @@ AstNode* new_EmptyBlockNode() {
 }
 
 CompileResult compile_EmptyBlock() {
-  CompileResult res = {(char*) "nop\n"};
+  CompileResult res = {(char*) "nop"};
   return res;
 }

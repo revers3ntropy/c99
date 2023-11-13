@@ -33,15 +33,15 @@ char* removeAllComments(char* str) {
       i = j;
     }
   }
-  int contigousIndex = 0;
+  int contiguousIndex = 0;
   for (int i = 0; i < length; i++) {
     if (str[i] != '`' && str[i] != '\t') {
-      str[contigousIndex] = str[i];
-      contigousIndex++;
+      str[contiguousIndex] = str[i];
+      contiguousIndex++;
     }
   }
-  str[contigousIndex] = '\0';
-  str = (char*) realloc(str, contigousIndex + 1);
+  str[contiguousIndex] = '\0';
+  str = (char*) realloc(str, contiguousIndex + 1);
   return str;
 }
 
