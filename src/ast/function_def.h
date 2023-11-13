@@ -7,11 +7,11 @@
 
 typedef struct {
   AstNodeType t;
-  char *name;
-  AstNode *body;
+  char* name;
+  AstNode* body;
 } FunctionDefNode;
 
-AstNode *new_FunctionDefNode(char *name, AstNode *body);
+AstNode* new_FunctionDefNode(char* name, AstNode* body);
 
 CompileResult compile_FunctionDef(FunctionDefNode *self);
 
