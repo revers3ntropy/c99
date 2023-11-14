@@ -1,4 +1,6 @@
+#define _GNU_SOURCE
 #include "tokens.h"
+#include <stdio.h>
 
 const char* tokenTypeAsString(enum tokenType type) {
   switch (type) {
@@ -247,8 +249,8 @@ list_t* tokenise(char* input) {
         break;
       }
       case '>': {
-        if (list->tail->prev && list->tail->prev->prev &&
-            list->tail->prev->prev->token->type == INCLUDE) {
+        if (list->tail->prev && list->tail->prev->prev && list->tail->prev->prev->prev &&
+            list->tail->prev->prev->prev->token->type == INCLUDE) {
           // if part of an include then ignore this
           break;
         } else {
@@ -346,5 +348,23 @@ list_t* tokenise(char* input) {
     }
     i++;
   }
+  // when parsing a #include <library.h> it is split into the tokens: INCLUDE library DOT h next -> INCLUDE library.h next
+  // combine them into a single token for the library name               ppp   pp     p  c  n
+  listNode_t* temp = list->head;
+  while (temp != NULL) {
+    if (temp->prev && temp->prev->prev && temp->prev->prev->prev && temp->prev->prev->prev->token->type == INCLUDE && temp->token->type == IDENTIFIER && temp->prev->token->type == DOT) {
+      // create the new token
+      char* newLiteral;
+      asprintf(&newLiteral, "%s.h", (char*) temp->prev->prev->token->literal);
+      token_t* t = token_new(IDENTIFIER, newLiteral);
+      token_Free(temp->prev->prev->token);
+      temp->prev->prev->token = t;
+      temp->prev->prev->next = temp->next;
+      temp = temp->next;
+    } else {
+      temp = temp->next;
+    }
+  }
+
   return list;
 }

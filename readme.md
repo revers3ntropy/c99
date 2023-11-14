@@ -8,7 +8,7 @@ $ cd c99
 $ make
 ```
 #### Auxilliary Functions
-To Perform the Following operations run the assosciated commands in the roots of the project directory.
+To perform the Following operations run the assosciated commands in the root of the project directory.
 - Compilation `make compile`
 - Valgrind Check `make valgrind`
 - Formatting `make format`
