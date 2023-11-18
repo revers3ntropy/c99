@@ -17,5 +17,5 @@ CompileResult compile_FunctionDef(FunctionDefNode* self) {
 
   char* asm_res;
   asprintf(&asm_res, "%s:\n%s\n.return:\n", self->name, bodyResult.assembly);
-  return (CompileResult) { asm_res };
+  return (CompileResult){asm_res};
 }
