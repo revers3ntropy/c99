@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/types.h>
 
-enum tokenType {
+typedef enum {
   // Single Character Tokens
   LEFT_BRACE,
   RIGHT_BRACE,
@@ -57,41 +57,41 @@ enum tokenType {
 
   // mark eof
   EOF_TOKEN
-};
+} TokenType;
 
-typedef struct Token {
-  enum tokenType type;
+typedef struct {
+  TokenType type;
   void* literal;
-} token_t;
+} Token;
 
-typedef struct listNode {
-  token_t* token;
-  struct listNode* next;
-  struct listNode* prev;
-} listNode_t;
+typedef struct _TokenListNode {
+  Token* token;
+  struct _TokenListNode* next;
+  struct _TokenListNode* prev;
+} TokenListNode;
 
-typedef struct listContainer {
+typedef struct {
   int size;
-  struct listNode* head;
-  struct listNode* tail;
-} list_t;
+  TokenListNode* head;
+  TokenListNode* tail;
+} TokenList;
 
-token_t* token_new(enum tokenType type, void* literal);
+Token* Token_new(TokenType type, void* literal);
 
-void token_Free(token_t* t);
+void Token_free(Token* t);
 
-const char* tokenTypeAsString(enum tokenType type);
+const char* TokenType_as_str(TokenType type);
 
-void tokenlist_Print(list_t* list);
+void TokenList_print(TokenList* list);
 
-list_t* tokenlist_Initialise();
+TokenList* TokenList_new();
 
-void tokenlist_Append(list_t* list, token_t* t);
+void TokenList_append(TokenList* list, Token* t);
 
-void tokenlist_RemoveTail(list_t* list);
+void TokenList_remove_tail(TokenList* list);
 
-void tokenlist_Free(list_t* list);
+void TokenList_free(TokenList* list);
 
-list_t* tokenise(char* input);
+TokenList* TokenList_tokenise(char* input);
 
 #endif

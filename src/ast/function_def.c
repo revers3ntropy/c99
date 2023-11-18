@@ -4,7 +4,7 @@
 
 #include "function_def.h"
 
-AstNode* new_FunctionDefNode(char* name, AstNode* body) {
+AstNode* FunctionDefNode_new(char* name, AstNode* body) {
   FunctionDefNode* self = malloc(sizeof(FunctionDefNode));
   self->t = FUNCTION_DEF;
   self->name = name;
@@ -12,10 +12,17 @@ AstNode* new_FunctionDefNode(char* name, AstNode* body) {
   return (AstNode*) self;
 }
 
-CompileResult compile_FunctionDef(FunctionDefNode* self) {
-  CompileResult bodyResult = compileAst(self->body);
+CompileResult FunctionDef_compile(FunctionDefNode* self) {
+  CompileResult bodyResult = AstNode_compile(self->body);
 
   char* asm_res;
-  asprintf(&asm_res, "%s:\n%s\n.return:\n", self->name, bodyResult.assembly);
+  asprintf(&asm_res, "%s:\n%s\n.return:", self->name, bodyResult.assembly);
+  CompileResult_free(bodyResult);
   return (CompileResult){asm_res};
+}
+
+void FunctionDef_free(FunctionDefNode* self) {
+  free(self->name);
+  AstNode_free(self->body);
+  free(self);
 }

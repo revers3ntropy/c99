@@ -7,9 +7,9 @@ set(CMAKE_C_FLAGS "-Wall -Werror -Wextra -Wnull-dereference -Wwrite-strings -Wfo
 add_executable(c99
         src/main.c
 
-        src/ast/ast.c 
-        src/ast/empty_block.c 
-        src/ast/function_def.c 
+        src/ast/ast.c
+        src/ast/empty_block.c
+        src/ast/function_def.c
 
         src/parsing/parser.c
         src/parsing/tokens.c

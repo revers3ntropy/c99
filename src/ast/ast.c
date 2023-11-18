@@ -1,25 +1,37 @@
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "ast.h"
 #include "empty_block.h"
 #include "function_def.h"
 
-CompileResult compileAst(AstNode* node) {
-  CompileResult res;
+CompileResult AstNode_compile(AstNode* node) {
   switch (node->type) {
     case FUNCTION_DEF:
-      res = compile_FunctionDef((FunctionDefNode*) node);
-      break;
+      return FunctionDef_compile((FunctionDefNode*) node);
     case EMPTY_BLOCK:
-      res = compile_EmptyBlock();
-      break;
-    default:
-      res = (CompileResult){(char*) "nop\n"};
+      return EmptyBlock_compile((EmptyBlockNode*) node);
+    default: {
+      // TODO: error handling
+      char* asm_res;
+      asprintf(&asm_res, "nop\n");
+      return (CompileResult){asm_res};
+    }
   }
-  free(node);
-  return res;
 }
 
-void freeAstResult(CompileResult result) {
-  if (result.assembly) {
-    free(result.assembly);
+void AstNode_free(AstNode* node) {
+  switch (node->type) {
+    case FUNCTION_DEF:
+      FunctionDef_free((FunctionDefNode*) node);
+      break;
+    case EMPTY_BLOCK:
+      EmptyBlock_free((EmptyBlockNode*) node);
+      break;
   }
+}
+
+void CompileResult_free(CompileResult result) {
+  free(result.assembly);
 }

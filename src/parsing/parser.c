@@ -1,20 +1,22 @@
-#include "parser.h"
-#include "../ast/empty_block.h"
-#include "../ast/function_def.h"
-
+#define _GNU_SOURCE
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-AstNode* parse() {
-  return new_FunctionDefNode((char*) "main", new_EmptyBlockNode());
+#include "../ast/empty_block.h"
+#include "../ast/function_def.h"
+#include "parser.h"
+
+AstNode* parse(TokenList* tokens) {
+  TokenList_free(tokens);
+  char* name_str;
+  asprintf(&name_str, "main");
+  return FunctionDefNode_new(name_str, EmptyBlockNode_new());
 }
 
 char* removeAllComments(char* str) {
-  if (str == NULL) {
-    return NULL;
-  }
+  if (str == NULL) return NULL;
   int length = strlen(str);
   for (int i = 1; i < length; i++) {
     if (str[i - 1] == '/' && str[i] == '*') {

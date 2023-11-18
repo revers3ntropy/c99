@@ -18,8 +18,9 @@ typedef struct {
   char* assembly;
 } CompileResult;
 
-CompileResult compileAst(AstNode* node);
+CompileResult AstNode_compile(AstNode* node);
+void AstNode_free(AstNode* node);
 
-void freeAstResult(CompileResult result);
+void CompileResult_free(CompileResult result);
 
 #endif

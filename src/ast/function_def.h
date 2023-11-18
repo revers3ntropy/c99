@@ -11,8 +11,8 @@ typedef struct {
   AstNode* body;
 } FunctionDefNode;
 
-AstNode* new_FunctionDefNode(char* name, AstNode* body);
-
-CompileResult compile_FunctionDef(FunctionDefNode* self);
+AstNode* FunctionDefNode_new(char* name, AstNode* body);
+CompileResult FunctionDef_compile(FunctionDefNode* self);
+void FunctionDef_free(FunctionDefNode* self);
 
 #endif

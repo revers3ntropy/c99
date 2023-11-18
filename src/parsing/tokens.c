@@ -2,7 +2,7 @@
 #include "tokens.h"
 #include <stdio.h>
 
-const char* tokenTypeAsString(enum tokenType type) {
+const char* TokenType_as_str(TokenType type) {
   switch (type) {
     case IF:
       return "IF";
@@ -86,14 +86,14 @@ const char* tokenTypeAsString(enum tokenType type) {
   return "UNKNOWN";
 }
 
-token_t* token_new(enum tokenType type, void* literal) {
-  token_t* t = (token_t*) malloc(sizeof(token_t));
+Token* Token_new(TokenType type, void* literal) {
+  Token* t = (Token*) malloc(sizeof(Token));
   t->type = type;
   t->literal = literal;
   return t;
 }
 
-void token_Free(token_t* t) {
+void Token_free(Token* t) {
   if (t) {
     if (t->literal) {
       free(t->literal);
@@ -102,33 +102,33 @@ void token_Free(token_t* t) {
   }
 }
 
-void tokenlist_Print(list_t* list) {
-  struct listNode* node = list->head;
+void TokenList_print(TokenList* list) {
+  TokenListNode* node = list->head;
   printf("[ ");
   while (node != NULL && node->token != NULL) {
     if (node->token->type == STRING || node->token->type == CHARACTER) {
-      printf("%s(\"%s\") ", tokenTypeAsString(node->token->type),
+      printf("%s(\"%s\") ", TokenType_as_str(node->token->type),
              (char*) node->token->literal);
     } else if (node->token->type == IDENTIFIER) {
       printf("%s ", (char*) node->token->literal);
     } else {
-      printf("%s ", tokenTypeAsString(node->token->type));
+      printf("%s ", TokenType_as_str(node->token->type));
     }
     node = node->next;
   }
   printf("]\n");
 }
 
-list_t* tokenlist_Initialise() {
-  list_t* list = (list_t*) malloc(sizeof(list_t));
+TokenList* TokenList_new() {
+  TokenList* list = (TokenList*) malloc(sizeof(TokenList));
   list->size = 0;
   list->head = NULL;
   list->tail = NULL;
   return list;
 }
 
-void tokenlist_Append(list_t* list, token_t* t) {
-  listNode_t* newNode = (listNode_t*) malloc(sizeof(listNode_t));
+void TokenList_append(TokenList* list, Token* t) {
+  TokenListNode* newNode = (TokenListNode*) malloc(sizeof(TokenListNode));
   newNode->token = t;
   if (list->size == 0) {
     newNode->next = NULL;
@@ -145,82 +145,82 @@ void tokenlist_Append(list_t* list, token_t* t) {
 }
 
 // will attempt to free the token in the tail node
-void tokenlist_RemoveTail(list_t* list) {
+void TokenList_remove_tail(TokenList* list) {
   if (list->size == 0) {
     return;
   } else if (list->size == 1) {
-    token_Free(list->tail->token);
+    Token_free(list->tail->token);
     free(list->tail);
     list->head = NULL;
     list->tail = NULL;
     list->size = 0;
     return;
   }
-  listNode_t* temp = list->tail;
+  TokenListNode* temp = list->tail;
   list->tail = list->tail->prev;
   list->tail->next = NULL;
-  token_Free(temp->token);
+  Token_free(temp->token);
   free(temp);
   list->size--;
 }
 
-void tokenlist_Free(list_t* list) {
+void TokenList_free(TokenList* list) {
   while (list->size > 0) {
-    tokenlist_RemoveTail(list);
+    TokenList_remove_tail(list);
   }
   free(list);
 }
 
-list_t* tokenise(char* input) {
-  list_t* list = tokenlist_Initialise();
+TokenList* TokenList_tokenise(char* input) {
+  TokenList* list = TokenList_new();
   uint i = 0;
   while (i < strlen(input)) {
     switch (input[i]) {
       case '#':
-        tokenlist_Append(list, token_new(HASH, NULL));
+        TokenList_append(list, Token_new(HASH, NULL));
         break;
       case '(':
-        tokenlist_Append(list, token_new(LEFT_PAREN, NULL));
+        TokenList_append(list, Token_new(LEFT_PAREN, NULL));
         break;
       case ')':
-        tokenlist_Append(list, token_new(RIGHT_PAREN, NULL));
+        TokenList_append(list, Token_new(RIGHT_PAREN, NULL));
         break;
       case '[':
-        tokenlist_Append(list, token_new(LEFT_BRACKET, NULL));
+        TokenList_append(list, Token_new(LEFT_BRACKET, NULL));
         break;
       case ']':
-        tokenlist_Append(list, token_new(RIGHT_BRACKET, NULL));
+        TokenList_append(list, Token_new(RIGHT_BRACKET, NULL));
         break;
       case ';':
-        tokenlist_Append(list, token_new(SEMICOLON, NULL));
+        TokenList_append(list, Token_new(SEMICOLON, NULL));
         break;
       case ',':
-        tokenlist_Append(list, token_new(COMMA, NULL));
+        TokenList_append(list, Token_new(COMMA, NULL));
         break;
       case '.':
-        tokenlist_Append(list, token_new(DOT, NULL));
+        TokenList_append(list, Token_new(DOT, NULL));
         break;
       case '+':
-        tokenlist_Append(list, token_new(PLUS, NULL));
+        TokenList_append(list, Token_new(PLUS, NULL));
         break;
       case '-':
-        tokenlist_Append(list, token_new(MINUS, NULL));
+        TokenList_append(list, Token_new(MINUS, NULL));
         break;
       case '*':
-        tokenlist_Append(list, token_new(ASTERISK, NULL));
+        TokenList_append(list, Token_new(ASTERISK, NULL));
         break;
       case '{':
-        tokenlist_Append(list, token_new(LEFT_BRACE, NULL));
+        TokenList_append(list, Token_new(LEFT_BRACE, NULL));
         break;
       case '}':
-        tokenlist_Append(list, token_new(RIGHT_BRACE, NULL));
+        TokenList_append(list, Token_new(RIGHT_BRACE, NULL));
         break;
       case '!': {
         if (input[i + 1] == '=') {
-          tokenlist_Append(list, token_new(NOT_EQUAL, NULL));
+          TokenList_append(list, Token_new(NOT_EQUAL, NULL));
           i++;
         } else {
-          tokenlist_Append(list, token_new(NOT, NULL));
+          TokenList_append(list, Token_new(NOT, NULL));
         }
         break;
       }
@@ -232,7 +232,7 @@ list_t* tokenise(char* input) {
         char* LiteralValue = (char*) calloc(j - i + 1, sizeof(char));
         LiteralValue = (char*) memcpy(LiteralValue, input + i + 1, j - i - 1);
         LiteralValue[j - i] = '\0';
-        tokenlist_Append(list, token_new(STRING, LiteralValue));
+        TokenList_append(list, Token_new(STRING, LiteralValue));
         i = j;
         break;
       }
@@ -240,12 +240,12 @@ list_t* tokenise(char* input) {
         char* LiteralValue = (char*) malloc(2);
         LiteralValue[0] = input[i + 1];
         LiteralValue[1] = 0;
-        tokenlist_Append(list, token_new(CHARACTER, LiteralValue));
+        TokenList_append(list, Token_new(CHARACTER, LiteralValue));
         i += 2;
         break;
       }
       case '/': {
-        tokenlist_Append(list, token_new(FORWARD_SLASH, NULL));
+        TokenList_append(list, Token_new(FORWARD_SLASH, NULL));
         break;
       }
       case '>': {
@@ -255,10 +255,10 @@ list_t* tokenise(char* input) {
           break;
         } else {
           if (input[i + 1] == '=') {
-            tokenlist_Append(list, token_new(GREATER_EQUAL, NULL));
+            TokenList_append(list, Token_new(GREATER_EQUAL, NULL));
             i++;
           } else {
-            tokenlist_Append(list, token_new(GREATER, NULL));
+            TokenList_append(list, Token_new(GREATER, NULL));
           }
           break;
         }
@@ -270,28 +270,25 @@ list_t* tokenise(char* input) {
           break;
         } else {
           if (input[i + 1] == '=') {
-            tokenlist_Append(list, token_new(LESS_EQUAL, NULL));
+            TokenList_append(list, Token_new(LESS_EQUAL, NULL));
             i++;
           } else {
-            tokenlist_Append(list, token_new(LESS, NULL));
+            TokenList_append(list, Token_new(LESS, NULL));
           }
         }
         break;
       }
       case '=': {
         if (input[i + 1] == '=') {
-          tokenlist_Append(list, token_new(EQUAL_EQUAL, NULL));
+          TokenList_append(list, Token_new(EQUAL_EQUAL, NULL));
         } else {
-          tokenlist_Append(list, token_new(EQUAL, NULL));
+          TokenList_append(list, Token_new(EQUAL, NULL));
         }
         break;
       }
       case '\t':
-        break;
       case '\r':
-        break;
       case ' ':
-        break;
       case '\n':
         break;
       default: {
@@ -309,36 +306,36 @@ list_t* tokenise(char* input) {
           i = j - 1;
 
           if (strcmp(LiteralValue, "int") == 0) {
-            tokenlist_Append(list, token_new(INT, NULL));
+            TokenList_append(list, Token_new(INT, NULL));
             free(LiteralValue);
           } else if (strcmp(LiteralValue, "void") == 0) {
-            tokenlist_Append(list, token_new(VOID, NULL));
+            TokenList_append(list, Token_new(VOID, NULL));
             free(LiteralValue);
           } else if (strcmp(LiteralValue, "if") == 0) {
-            tokenlist_Append(list, token_new(IF, NULL));
+            TokenList_append(list, Token_new(IF, NULL));
             free(LiteralValue);
           } else if (strcmp(LiteralValue, "else") == 0) {
-            tokenlist_Append(list, token_new(ELSE, NULL));
+            TokenList_append(list, Token_new(ELSE, NULL));
             free(LiteralValue);
           } else if (strcmp(LiteralValue, "while") == 0) {
-            tokenlist_Append(list, token_new(WHILE, NULL));
+            TokenList_append(list, Token_new(WHILE, NULL));
             free(LiteralValue);
           } else if (strcmp(LiteralValue, "for") == 0) {
-            tokenlist_Append(list, token_new(FOR, NULL));
+            TokenList_append(list, Token_new(FOR, NULL));
             free(LiteralValue);
           } else if (strcmp(LiteralValue, "return") == 0) {
-            tokenlist_Append(list, token_new(RETURN, NULL));
+            TokenList_append(list, Token_new(RETURN, NULL));
             free(LiteralValue);
           } else if (strcmp(LiteralValue, "include") == 0 &&
                      list->tail->token->type == HASH) {
             if (list->tail->token->literal) {
               free(list->tail->token->literal);
             }
-            tokenlist_RemoveTail(list);
-            tokenlist_Append(list, token_new(INCLUDE, NULL));
+            TokenList_remove_tail(list);
+            TokenList_append(list, Token_new(INCLUDE, NULL));
             free(LiteralValue);
           } else {
-            tokenlist_Append(list, token_new(IDENTIFIER, LiteralValue));
+            TokenList_append(list, Token_new(IDENTIFIER, LiteralValue));
           }
 
         } else {
@@ -348,16 +345,19 @@ list_t* tokenise(char* input) {
     }
     i++;
   }
+
+  free(input);
+
   // when parsing a #include <library.h> it is split into the tokens: INCLUDE library DOT h next -> INCLUDE library.h next
   // combine them into a single token for the library name               ppp   pp     p  c  n
-  listNode_t* temp = list->head;
+  TokenListNode* temp = list->head;
   while (temp != NULL) {
     if (temp->prev && temp->prev->prev && temp->prev->prev->prev && temp->prev->prev->prev->token->type == INCLUDE && temp->token->type == IDENTIFIER && temp->prev->token->type == DOT) {
       // create the new token
       char* newLiteral;
       asprintf(&newLiteral, "%s.h", (char*) temp->prev->prev->token->literal);
-      token_t* t = token_new(IDENTIFIER, newLiteral);
-      token_Free(temp->prev->prev->token);
+      Token* t = Token_new(IDENTIFIER, newLiteral);
+      Token_free(temp->prev->prev->token);
       temp->prev->prev->token = t;
       temp->prev->prev->next = temp->next;
       temp = temp->next;
